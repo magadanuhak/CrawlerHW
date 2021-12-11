@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MaklerCrawlerController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [MaklerCrawlerController::class, 'index']);
+Route::get('/full', [MaklerCrawlerController::class, 'fullDescriptions']);
