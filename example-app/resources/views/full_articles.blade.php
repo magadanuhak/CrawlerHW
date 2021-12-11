@@ -134,9 +134,10 @@
                                 </div>
                                 <div class="informations">
                                     <span class="badge bg-dark"> <i class="mdi mdi-city"></i> {{$desc['city']}}</span>
-                                    <span class="badge bg-dark"> <i class="mdi mdi-user"></i> {{$desc['author']}}</span>
+                                    <span class="badge bg-dark"> <i class="mdi mdi-user"></i> {{$desc['author_name']}}</span>
                                     <span class="badge bg-dark"> <i class="mdi mdi-calendar"></i> {{$desc['datetime']}}</span>
                                     <span class="badge bg-dark"> <i class="mdi mdi-eye"></i> {{$desc['views']}}</span>
+                                    <span class="badge bg-dark"> <i class="mdi mdi-email"></i> {{$desc['email']}}</span>
                                     @foreach($desc['phones'] as $phone)
                                         <span class="badge bg-dark"> <i
                                                     class="mdi mdi-tel"></i> {{$phone}}</span>
