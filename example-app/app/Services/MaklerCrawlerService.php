@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Str;
 use Symfony\Component\DomCrawler\Crawler;
 
 class MaklerCrawlerService
@@ -92,10 +93,10 @@ class MaklerCrawlerService
         $image = $article->filter('.ls-detail_imgBlock img');
 
         if ($image->count()) {
-            $content['img'] = $image->attr('data-src');
+            $content['img'] = str_replace('thumb/', 'original/',$image->attr('data-src'));
         }
 
-        $content['description'] = $article->filter('.subfir')->text('');
+        $content['description'] = Str::limit($article->filter('.subfir')->text(''), 120, '(...)');
         $content['price'] = $article->filter('.ls-detail_price')->text('');
         $content['city'] = $article->filter('#pointer-icon')->text('');
         $content['phone'] = $article->filter('.phone-icon')->text('');
