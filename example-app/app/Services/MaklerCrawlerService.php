@@ -23,31 +23,32 @@ class MaklerCrawlerService
 
         $fullDescriptionArticles = [];
 
-        foreach ($urls as $url){
+        foreach ($urls as $url) {
             $data = $this->getSingleArticleData($url);
 
-            if(empty($data)){
+            if (empty($data)) {
                 continue;
             }
 
             $fullDescriptionArticles[] = $data;
         }
-        dd($fullDescriptionArticles);
+
+        session(['full_descriptions' => $fullDescriptionArticles]);
+
         return $fullDescriptionArticles;
     }
-
 
 
     private function getPagesUrls()
     {
         $links = [];
 
-        foreach ($this->getShortDescriptions() as $shortDescription){
-            if(empty($shortDescription['url'])){
+        foreach ($this->getShortDescriptions() as $shortDescription) {
+            if (empty($shortDescription['url'])) {
                 continue;
             }
 
-            $links[]= "https://makler.md{$shortDescription['url']}";
+            $links[] = "https://makler.md{$shortDescription['url']}";
         }
 
         return $links;
@@ -63,8 +64,8 @@ class MaklerCrawlerService
         $articles = $contentCrawler->filter('#mainAnList .ls-detail article');
 
         $articles->each(function (Crawler $article, $i) use (&$results) {
-                $results[] = $this->articleContent($article);
-            });
+            $results[] = $this->articleContent($article);
+        });
 
 
         return $results;
@@ -93,13 +94,14 @@ class MaklerCrawlerService
         $image = $article->filter('.ls-detail_imgBlock img');
 
         if ($image->count()) {
-            $content['img'] = str_replace('thumb/', 'original/',$image->attr('data-src'));
+            $content['img'] = str_replace('thumb/', 'original/', $image->attr('data-src'));
         }
 
         $content['description'] = Str::limit($article->filter('.subfir')->text(''), 120, '(...)');
         $content['price'] = $article->filter('.ls-detail_price')->text('');
-        $content['city'] = $article->filter('#pointer-icon')->text('');
-        $content['phone'] = $article->filter('.phone-icon')->text('');
+        $content['city'] = $article->filter('.ls-detail_anData div')->text('');
+        $content['phone'] = $article->filter('.ls-detail_anData .phone_icon')->text('');
+        $content['datetime'] = $article->filter('.ls-detail_time')->text('');
 
         return $content;
     }
@@ -108,25 +110,25 @@ class MaklerCrawlerService
     {
         $page = $this->client->getUrlCrawler($url);
 
-        if(!$page->count()){
+        if (!$page->count()) {
             return [];
         }
 
         $content = [];
 
         $content['title'] = $page->filter(".anNameData")->text('Нету названия');
-        $itemTitleInfo =  $page->filter(".item_title_info");
+        $itemTitleInfo = $page->filter(".item_title_info");
 
-        if($itemTitleInfo->filter('span')->eq(0)->count()){
-            $content['city']  = $itemTitleInfo->filter('span')->eq(0)->text('Нету данных');
+        if ($itemTitleInfo->filter('span')->eq(0)->count()) {
+            $content['city'] = $itemTitleInfo->filter('span')->eq(0)->text('Нету данных');
         }
 
-        if($itemTitleInfo->filter('span')->eq(1)->count()){
-            $content['datetime']  = $itemTitleInfo->filter('span')->eq(1)->text('Нету данных');
+        if ($itemTitleInfo->filter('span')->eq(1)->count()) {
+            $content['datetime'] = $itemTitleInfo->filter('span')->eq(1)->text('Нету данных');
         }
 
-        if($itemTitleInfo->filter('span')->eq(2)->count()){
-            $content['views']  = $itemTitleInfo->filter('span')->eq(2)->text('Нету данных');
+        if ($itemTitleInfo->filter('span')->eq(2)->count()) {
+            $content['views'] = $itemTitleInfo->filter('span')->eq(2)->text('Нету данных');
         }
 
         $content['images'] = $this->getImages($page->filter("#anItemData .itmedia"));
@@ -136,16 +138,16 @@ class MaklerCrawlerService
         $content['author_name'] = $page->filter('.item_sipmleUser')->text('');
         $content['phones'] = $this->getPhones($page->filter('#item_phones'));
 
-        return  $content;
+        return $content;
 
     }
 
     private function getPhones($phones)
     {
         $numbers = [];
-        $phones->filter('li span')->each(function($span) use(&$numbers){
-            if($span->closest('li')->count()){
-                $numbers[] = str_replace(' ', '',$span->closest('li')->text(''));
+        $phones->filter('li span')->each(function ($span) use (&$numbers) {
+            if ($span->closest('li')->count()) {
+                $numbers[] = str_replace(' ', '', $span->closest('li')->text(''));
             }
         });
 
@@ -156,14 +158,8 @@ class MaklerCrawlerService
     {
         $result = [];
 
-        $images->each(function ($image) use(&$result){
-
-            if(!$image->count()){
-                return;
-            }
-
-            $result[] = $image->filter('a')->attr('href');
-
+        $images->filter('a')->each(function ($img) use (&$result) {
+            $result[] = $img->attr('href');
         });
 
         return $result;
