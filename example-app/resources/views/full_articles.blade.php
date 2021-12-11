@@ -71,7 +71,7 @@
         <div class="mask" style="background-color: rgba(0, 0, 0, 0.7);">
             <div class="d-flex justify-content-center align-items-center h-100">
                 <div class="text-white">
-                    <h1 class="mb-3">Статьи прлностью </h1>
+                    <h1 class="mb-3">Статьи пoлностью </h1>
                     <h5 class="mb-4">Полное описание всех обьявлений</h5>
                     <a
                             class="btn btn-outline-light btn-lg m-2"
@@ -94,28 +94,27 @@
 </header>
 <div class="container  mt-5">
     <div class="row d-flex justify-content-center">
-        @foreach($full_descriptions as $desc)
+        @foreach($full_descriptions as $key => $desc)
             @if(!empty($desc['title'] && !empty($desc['description'])))
-                <div class="accordion accordion-flush" id="accordionFlushExample">
+                <div class="accordion accordion-flush" id="f_{{$key}}">
                     <div class="accordion-item">
-                        <h2 class="accordion-header" id="flush-headingOne">
+                        <h2 class="accordion-header" id="flush-headingOne{{$key}}">
                             <button
                                     class="accordion-button collapsed"
                                     type="button"
                                     data-mdb-toggle="collapse"
-                                    data-mdb-target="#flush-collapseOne"
+                                    data-mdb-target="#flush-collapseOne{{$key}}"
                                     aria-expanded="false"
-                                    aria-controls="flush-collapseOne"
+                                    aria-controls="flush-collapseOne{{$key}}"
                             >
                                 {{$desc['title']}}
-
                             </button>
                         </h2>
                         <div
-                                id="flush-collapseOne"
+                                id="flush-collapseOne{{$key}}"
                                 class="accordion-collapse collapse"
-                                aria-labelledby="flush-headingOne"
-                                data-mdb-parent="#accordionFlushExample"
+                                aria-labelledby="flush-headingOne{{$key}}"
+                                data-mdb-parent="#f_{{$key}}"
                         >
                             <div class="accordion-body">
                                 <div class="description">

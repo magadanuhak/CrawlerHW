@@ -116,7 +116,7 @@ class MaklerCrawlerService
 
         $content = [];
 
-        $content['title'] = $page->filter(".anNameData")->text('Нету названия');
+        $content['title'] = $page->filter("#anNameData")->text('Нету названия');
         $itemTitleInfo = $page->filter(".item_title_info");
 
         if ($itemTitleInfo->filter('span')->eq(0)->count()) {
