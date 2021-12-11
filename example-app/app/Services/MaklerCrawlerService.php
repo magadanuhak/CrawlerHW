@@ -134,7 +134,7 @@ class MaklerCrawlerService
         $content['images'] = $this->getImages($page->filter("#anItemData .itmedia"));
 
         $content['description'] = $page->filter('.ittext')->text('');
-        $content['email'] = $page->filter('.itemail')->text('');
+        $content['email'] = $page->filter('.itemail li')->eq(1)->text('');
         $content['author_name'] = $page->filter('.item_sipmleUser')->text('');
         $content['phones'] = $this->getPhones($page->filter('#item_phones'));
 
