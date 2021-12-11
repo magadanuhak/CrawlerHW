@@ -21,9 +21,8 @@ class MaklerCrawlerController extends Controller
     public function fullDescriptions(Request $request, MaklerCrawlerService $service): Factory|View|Application
     {
 
-        $fullDescriptions = $service->getFullDescriptions($reload);
+        $fullDescriptions = $service->getFullDescriptions();
 
-        dd($fullDescriptions);
 
         return view('full_articles', ['full_descriptions' => $fullDescriptions]);
     }
